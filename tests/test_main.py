@@ -128,3 +128,61 @@ def test_delete_nonexistent_task_status_code():
 def test_delete_nonexistent_task_detail():
     response = client.delete("/tasks/999999")
     assert response.json()["detail"] == "Task not found"
+
+
+# G. PUT /tasks/{task_id} — existing task
+def test_update_existing_task_status_code():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    response = client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    assert response.status_code == 200
+
+
+def test_update_existing_task_message():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    response = client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    assert response.json()["message"] == "Task updated successfully"
+
+
+def test_update_existing_task_id_unchanged():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    response = client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    assert response.json()["task"]["id"] == task_id
+
+
+def test_update_existing_task_title_changed():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    response = client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    assert response.json()["task"]["title"] == "New title"
+
+
+def test_update_existing_task_completed_changed():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    response = client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    assert response.json()["task"]["completed"] is True
+
+
+# H. GET /tasks after PUT
+def test_updated_task_appears_in_list():
+    post_response = client.post("/tasks", json={"title": "Old title", "completed": False})
+    task_id = post_response.json()["task"]["id"]
+    client.put(f"/tasks/{task_id}", json={"title": "New title", "completed": True})
+    tasks = client.get("/tasks").json()["tasks"]
+    updated = next(t for t in tasks if t["id"] == task_id)
+    assert updated["title"] == "New title"
+    assert updated["completed"] is True
+
+
+# I. PUT /tasks/{task_id} — not found
+def test_update_nonexistent_task_status_code():
+    response = client.put("/tasks/999999", json={"title": "Anything", "completed": False})
+    assert response.status_code == 404
+
+
+def test_update_nonexistent_task_detail():
+    response = client.put("/tasks/999999", json={"title": "Anything", "completed": False})
+    assert response.json()["detail"] == "Task not found"
