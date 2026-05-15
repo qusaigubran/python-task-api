@@ -1,5 +1,5 @@
 import pytest
-import app.main as main_module
+import app.storage as storage
 from fastapi.testclient import TestClient
 from app.main import app
 
@@ -8,8 +8,7 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def reset_state():
-    main_module.tasks.clear()
-    main_module.next_id = 1
+    storage.reset_state()
 
 
 # A. GET /
