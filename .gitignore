@@ -4,3 +4,5 @@ __pycache__/
 .env
 .DS_Store
 debug.log
+data/*.db
+data/*.db
