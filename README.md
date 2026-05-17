@@ -1,35 +1,37 @@
 # Python Task API
 
-A simple learning project for building a task management API with **Python** and **FastAPI**.
+A simple learning project for building a task management API with **Python**, **FastAPI**, and **SQLite**.
 
-This project focuses on backend fundamentals: routing, validation, API design, in-memory data handling, and clear documentation.
+This project focuses on backend fundamentals: routing, validation, API design, persistent local storage, CRUD operations, and automated testing.
 
 ---
 
 ## Purpose
 
-The goal of this project is not to build a production system yet. The goal is to practice how backend APIs are structured step by step.
+The goal of this project is to practice how backend APIs are structured step by step.
 
 Core learning areas:
 
 - Python backend development
-- FastAPI basics
+- FastAPI routing
 - REST API design
-- Request and response validation
+- Request and response validation with Pydantic
+- SQLite database storage
 - CRUD operations
-- Simple testing with pytest
+- Automated testing with pytest
 - Clean project documentation
 
 ---
 
 ## Features
 
+- Home endpoint to confirm the API is running
 - Create a task
 - List all tasks
-- Get a task by ID
 - Update a task
 - Delete a task
-- Health check endpoint
+- SQLite-based task storage
+- Test coverage for main task flows
 
 ---
 
@@ -38,8 +40,10 @@ Core learning areas:
 - Python
 - FastAPI
 - Pydantic
+- SQLite
 - Uvicorn
 - Pytest
+- HTTPX
 
 ---
 
@@ -48,7 +52,11 @@ Core learning areas:
 ```text
 python-task-api/
 ├── app/
-│   └── main.py
+│   ├── main.py
+│   ├── models.py
+│   ├── storage.py
+│   └── routers/
+│       └── tasks.py
 ├── tests/
 │   └── test_main.py
 ├── requirements.txt
@@ -92,7 +100,7 @@ This activates the local environment on Unix-based systems.
 pip install -r requirements.txt
 ```
 
-This installs FastAPI, Uvicorn, and testing dependencies.
+This installs the API and testing dependencies.
 
 ### 4. Start the API server
 
@@ -108,10 +116,9 @@ This runs the development server with automatic reload.
 
 | Method | Endpoint | Description |
 |---|---|---|
-| GET | `/health` | Check API status |
+| GET | `/` | Confirm the API is running |
 | GET | `/tasks` | List all tasks |
 | POST | `/tasks` | Create a new task |
-| GET | `/tasks/{task_id}` | Get one task |
 | PUT | `/tasks/{task_id}` | Update one task |
 | DELETE | `/tasks/{task_id}` | Delete one task |
 
@@ -122,7 +129,6 @@ This runs the development server with automatic reload.
 ```json
 {
   "title": "Study FastAPI",
-  "description": "Practice building a simple API",
   "completed": false
 }
 ```
@@ -141,4 +147,14 @@ This runs the project test suite.
 
 ## Current Status
 
-Learning project — basic API structure completed. Future improvements may include database storage, authentication, Docker support, and CI checks.
+Learning project — basic FastAPI structure, SQLite storage, and task-flow tests are included.
+
+Future improvements may include:
+
+- `GET /tasks/{task_id}` endpoint
+- Partial updates with `PATCH`
+- Better validation rules
+- Docker support
+- GitHub Actions CI
+- API versioning
+- Authentication
